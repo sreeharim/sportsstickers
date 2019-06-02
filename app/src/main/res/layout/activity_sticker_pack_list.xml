@@ -8,11 +8,11 @@
     tools:showIn="@layout/activity_sticker_pack_list">
 
     <TextView
+        android:id="@+id/error_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:textColor="@android:color/holo_red_dark"
-        android:id="@+id/error_message" />
+        android:textColor="@android:color/holo_red_dark" />
 
 
     <android.support.v7.widget.RecyclerView
@@ -20,10 +20,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
+        android:layout_above="@id/banner_container"
         android:paddingBottom="90dp"
+
         />
 
 
+    <!--<LinearLayout-->
+        <!--android:id="@+id/banner_container"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:orientation="vertical" />-->
 
 
 </android.support.constraint.ConstraintLayout>

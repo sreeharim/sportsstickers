@@ -23,6 +23,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.InterstitialAdListener;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -69,13 +72,37 @@ public class StickerPackListAdapter extends RecyclerView.Adapter<StickerPackList
             if(AdManager.adShownTime != null)
                 diffInMs=curr.getTime()-AdManager.adShownTime.getTime();
             //Log.d("Adload","TIME DIFF ="+diffInMs);
-            if(AdManager.interstitialAd.isLoaded() && diffInMs >= 60000){
-                AdManager.interstitialAd.setAdListener(new AdListener() {
+            if(AdManager.interstitialAd.isAdLoaded() && !AdManager.interstitialAd.isAdInvalidated() && diffInMs >= 20000){
+                AdManager.interstitialAd.setAdListener(new InterstitialAdListener() {
                     @Override
-                    public void onAdClosed() {
-                        AdManager.interstitialAd.loadAd(new AdRequest.Builder().build());
-                        //AdManager.interstitialAd.loadAd(new AdRequest.Builder().addTestDevice("6706477978B844800256B79CEBE84DA6").build());
-                        view.getContext().startActivity(intent);
+                    public void onError(Ad ad, AdError adError) {
+
+                    }
+
+                    @Override
+                    public void onAdLoaded(Ad ad) {
+
+                    }
+
+                    @Override
+                    public void onAdClicked(Ad ad) {
+
+                    }
+
+                    @Override
+                    public void onLoggingImpression(Ad ad) {
+
+                    }
+
+                    @Override
+                    public void onInterstitialDisplayed(Ad ad) {
+
+                    }
+
+                    @Override
+                    public void onInterstitialDismissed(Ad ad) {
+                        AdManager.interstitialAd.loadAd();
+                                               view.getContext().startActivity(intent);
                     }
                 });
                 AdManager.adShownTime = Calendar.getInstance().getTime();

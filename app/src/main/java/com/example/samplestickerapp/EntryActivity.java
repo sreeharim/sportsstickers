@@ -18,6 +18,7 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 
+import com.facebook.ads.AudienceNetworkAds;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.ads.MobileAds;
 
@@ -32,10 +33,9 @@ public class EntryActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MobileAds.initialize(this,Constants.APP_ID);
-
+        AudienceNetworkAds.initialize(this);
         AdManager adManager = new AdManager(this);
-        //adManager.createAd(this);
+        adManager.createAd(this);
 
         Fresco.initialize(this);
         setContentView(R.layout.activity_entry);

@@ -24,8 +24,9 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
+
 
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -72,7 +73,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         content = (FrameLayout) findViewById(android.R.id.content);
         // inflate ad layout and set it to bottom by layouparams
         final LinearLayout ad = (LinearLayout) getLayoutInflater()
-                .inflate(R.layout.ad_layout, null);
+                .inflate(R.layout.fb_banner, null);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.BOTTOM;
@@ -113,10 +114,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void addLayoutToContent(View ad) {
-        // content.addView(ad);
         content.addView(ad);
-        AdView mAdView = (AdView) ad.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        AdView adView = new com.facebook.ads.AdView(this, getResources().getString(R.string.banner_id), AdSize.BANNER_HEIGHT_50);
+        LinearLayout adContainer = (LinearLayout) findViewById(R.id.banner_container);
+        adContainer.addView(adView);
+        adView.loadAd();
+
     }
 }

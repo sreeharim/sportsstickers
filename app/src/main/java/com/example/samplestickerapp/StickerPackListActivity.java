@@ -30,9 +30,17 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
+import com.facebook.ads.InterstitialAdListener;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -46,6 +54,8 @@ public class StickerPackListActivity extends AddStickerPackActivity {
     private ArrayList<StickerPack> stickerPackList;
     private final static String APP_TITLE = "Sports Stickers";// App Name
     private final static String APP_PNAME = "com.sports.sticker";// Package Name
+    private AdView adView;
+
 
     public void showRateDialog(final Context mContext, final SharedPreferences.Editor editor) {
         final Dialog dialog = new Dialog(mContext);
@@ -122,12 +132,20 @@ public class StickerPackListActivity extends AddStickerPackActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sticker_pack_list);
         setupAdAtBottom();
+       //loadFbBanner();
         packRecyclerView = findViewById(R.id.sticker_pack_list);
         stickerPackList = getIntent().getParcelableArrayListExtra(EXTRA_STICKER_PACK_LIST_DATA);
         showStickerPackList(stickerPackList);
     }
 
+    private void loadFbBanner(){
+        adView = new AdView(this, getResources().getString(R.string.banner_id), AdSize.BANNER_HEIGHT_50);
+        LinearLayout adContainer = (LinearLayout) findViewById(R.id.banner_container);
+        adContainer.addView(adView);
 
+        // Request an ad
+        adView.loadAd();
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -184,7 +202,49 @@ public class StickerPackListActivity extends AddStickerPackActivity {
 
 
     private final StickerPackListAdapter.OnAddButtonClickedListener onAddButtonClickedListener = pack -> {
-        addStickerPackToWhatsApp(pack.identifier, pack.name);
+        Date curr = Calendar.getInstance().getTime();
+        long diffInMs = 60000;
+        if(AdManager.adShownTime != null)
+            diffInMs=curr.getTime()-AdManager.adShownTime.getTime();
+
+        if(AdManager.interstitialAd.isAdLoaded() && !AdManager.interstitialAd.isAdInvalidated() && diffInMs >= 20000){
+            AdManager.interstitialAd.setAdListener(new InterstitialAdListener() {
+                @Override
+                public void onError(Ad ad, AdError adError) {
+
+                }
+
+                @Override
+                public void onAdLoaded(Ad ad) {
+
+                }
+
+                @Override
+                public void onAdClicked(Ad ad) {
+
+                }
+
+                @Override
+                public void onLoggingImpression(Ad ad) {
+
+                }
+
+                @Override
+                public void onInterstitialDisplayed(Ad ad) {
+
+                }
+
+                @Override
+                public void onInterstitialDismissed(Ad ad) {
+                    AdManager.interstitialAd.loadAd();
+                    addStickerPackToWhatsApp(pack.identifier, pack.name);
+                }
+            });
+            AdManager.adShownTime = Calendar.getInstance().getTime();
+            AdManager.interstitialAd.show();
+        }
+        else
+            addStickerPackToWhatsApp(pack.identifier, pack.name);
     };
 
     private void recalculateColumnCount() {

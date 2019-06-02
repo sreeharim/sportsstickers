@@ -2,8 +2,8 @@ package com.example.samplestickerapp;
 
 import android.content.Context;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
+
+import com.facebook.ads.InterstitialAd;
 
 import java.util.Date;
 
@@ -17,15 +17,9 @@ public class AdManager {
     }
 
     public void createAd(Context adContext) {
-        // Create an ad.
-        interstitialAd = new InterstitialAd(adContext);
-        interstitialAd.setAdUnitId(Constants.INTERSTITIAL_AD_ID);
+        interstitialAd = new InterstitialAd(adContext,"484697385608416_484701992274622");
 
-        AdRequest adRequest = new AdRequest.Builder().build();
-        //AdRequest adRequest = new AdRequest.Builder().addTestDevice("6706477978B844800256B79CEBE84DA6").build();
-
-        // Load the interstitial ad.
-        interstitialAd.loadAd(adRequest);
+        interstitialAd.loadAd();
     }
 
 
